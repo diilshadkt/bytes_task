@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -36,8 +37,16 @@ class ListElement with _$ListElement {
 
   static Future<List<ListElement>> fetchProducts() async {
     const String url = 'https://my-store.in/v2/product/api/getProductsList';
-    final response = await http.post(Uri.parse(url));
+    const Map<String, String> headers = {
+      'appid': '2IPbyrCUM7s5JZhnB9fxFAD6',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
 
+    const Map<String, String> body = {
+      'page': '1',
+    };
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return (data['list'] as List)

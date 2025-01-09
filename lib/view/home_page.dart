@@ -1,5 +1,8 @@
+import 'package:bytes_task/controller/bloc/product_bloc.dart';
+import 'package:bytes_task/controller/bloc/product_state.dart';
 import 'package:bytes_task/view/overview_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -39,30 +42,43 @@ class HomePage extends StatelessWidget {
               ],
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
-                    crossAxisCount: 2),
-                itemCount: 9,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OverviewPage(),
-                          ));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Icon(Icons.person),
-                      ),
-                    ),
-                  );
+              child: BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state.errorMessage != null) {
+                    return Center(child: Text(state.errorMessage!));
+                  } else {
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          crossAxisCount: 2),
+                      itemCount: state.products.length,
+                      itemBuilder: (context, index) {
+                         final product = state.products[index];
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OverviewPage(),
+                                ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(product.title),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             )
