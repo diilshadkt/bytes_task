@@ -1,7 +1,7 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 part 'api_model.freezed.dart';
 part 'api_model.g.dart';
@@ -33,4 +33,18 @@ class ListElement with _$ListElement {
 
   factory ListElement.fromJson(Map<String, dynamic> json) =>
       _$ListElementFromJson(json);
+
+  static Future<List<ListElement>> fetchProducts() async {
+    const String url = 'https://my-store.in/v2/product/api/getProductsList';
+    final response = await http.post(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return (data['list'] as List)
+          .map((json) => ListElement.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load products');
+    }
+  }
 }
