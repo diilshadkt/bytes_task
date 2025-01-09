@@ -33,7 +33,6 @@ class HomePage extends StatelessWidget {
                 ),
                 Text(
                   "Choose your Product",
-                  // textAlign: TextAlign.end,
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
