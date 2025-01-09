@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProductBloc()..add(FetchProductsEvent()),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Bytes task',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
          
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
